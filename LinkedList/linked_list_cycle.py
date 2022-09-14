@@ -15,14 +15,12 @@ def createNode(index):
 
 # traverse linked list
 head = createNode(0)
-visited = {}
 hasCycle = False
-while head != None:
-    if head not in visited:
-        visited[head] = True
-        head = head.next
-    else:
-        print(head.val)
+walker = runner = head
+while walker != None and runner != None:
+    walker = walker.next
+    runner = runner.next.next
+    if walker == runner:
         hasCycle = True
         break
 
