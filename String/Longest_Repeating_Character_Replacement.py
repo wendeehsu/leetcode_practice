@@ -1,30 +1,27 @@
 s = "WENDEE"
-k = 0
+k = 4
 
-startIndex = endIndex = 0
-nextIndexList = []
-maxLength = 1
-while endIndex != len(s):
-    """
-    if s[endIndex] = s[startIndex]: increase window
-    else:
-        case 1. k > 0: k-= 1, record this place, increase window
-        case 2. move start to nextIndex, reset nextIndex and k
-    """
-    if s[startIndex] == s[endIndex]:
-        maxLength = max(maxLength, endIndex-startIndex+1)
-        endIndex += 1
-    else:
-        if len(nextIndexList) < k:
-            nextIndexList += [endIndex]
-            maxLength = max(maxLength, endIndex-startIndex+1)
-            endIndex += 1
-        else:
-            if k > 0:
-                startIndex = endIndex = nextIndexList[0]
-            else:
-                startIndex = endIndex
-            nextIndexList = []
+startIndex = 0
+maxLetterCount = 0
+letterCount = {}
+result = 0
 
-maxLength = max(maxLength, min(len(s),endIndex-startIndex+k-len(nextIndexList)))
-print(s,k,", len=", maxLength)
+def updateLetterCount(letter, num):
+    if letter in letterCount:
+        letterCount[letter] += num
+    else:
+        letterCount[letter] = num
+    
+for index, letter in enumerate(s):
+    updateLetterCount(letter,1)
+    maxLetterCount = max(maxLetterCount, letterCount[letter])
+
+    while (index - startIndex + 1 - maxLetterCount) > k:
+        updateLetterCount(s[startIndex],-1)
+        startIndex += 1
+        maxLetterCount = 0
+        for i in letterCount:
+            maxLetterCount = max(maxLetterCount, letterCount[i])
+    result = max(result, index-startIndex+1)
+
+print(result)
