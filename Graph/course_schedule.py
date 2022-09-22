@@ -1,5 +1,7 @@
-numCourses = 3
-prerequisites = [[1,0], [0,2]]
+numCourses = 4
+prerequisites = [[1,0],[2,0],[3,1],[3,2]]
+# prerequisites = [[1,0],[2,0],[3,1],[3,2],[1,3]]
+# prerequisites = [[0,1],[1,2],[0,3],[3,0]]
 
 class Node:
     def __init__(self, val = 0, pre = None):
@@ -17,25 +19,24 @@ for pair in prerequisites:
 visited = [0] * numCourses
 
 def traverse(index):    
-    # detect cycle
     print(index, "current visited ->", visited)
-    if visited[index] == 1:
-        return False
-    
-    visited[index] = 1 # in this cycle
 
+    visited[index] = 2 
     if index in classMap:
         currentNode = classMap[index]
         for preCourse in currentNode.pre:
-            if traverse(preCourse.val) != True:
+            if visited[preCourse.val] == 2: # visiting
                 return False
+            elif visited[preCourse.val] == 1: # visited
+                continue
+            else:
+                if traverse(preCourse.val) == False:
+                    return False
 
-    # # finish detect, set to 1
-    # for i in range(len(visited)):
-    #     if visited[i] == 2:
-    #         visited[i] = 1
+    visited[index] = 1
     return True
 
+final = True
 while sum(visited) != numCourses:
     startIndex = -1
     for index, mark in enumerate(visited):
@@ -43,12 +44,7 @@ while sum(visited) != numCourses:
             startIndex = index
             break
     if traverse(startIndex) == False:
-        print(False)
+        final = False
         break
 
-print(visited)
-print(True)
-# for i in classMap:
-#     print(i)
-#     for j in classMap[i].pre:
-#         print("->",j.val)
+print(final)
