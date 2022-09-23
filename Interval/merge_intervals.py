@@ -28,25 +28,15 @@ def solution(intervals):
         """
         cases:
         1. no overlap: startIndex++ endIndex++
-        2. start is larger: pop endIndex
-        3. end is larger: pop startIndex
-        4. merge
+        2. merge
         """
         if startInterval.end < endInterval.start:
             startIndex += 1
             endIndex += 1
-        
-        elif startInterval.start <= endInterval.start \
-            and startInterval.end >= endInterval.end:
-            intervals.pop(endIndex)
-        
-        elif endInterval.start <= startInterval.start \
-            and startInterval.end <= endInterval.end:
-            intervals.pop(startIndex)
         else:
             # to merge
             intervals.pop(endIndex)
-            intervals[startIndex] = interval(startInterval.start, endInterval.end)
+            intervals[startIndex] = interval(min(startInterval.start,endInterval.start), max(startInterval.end,endInterval.end))
 
     for i in range(len(intervals)):
         intervals[i] = intervals[i].toList()
