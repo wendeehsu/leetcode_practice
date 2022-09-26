@@ -1,7 +1,6 @@
 s = "ADOBECODEBANC"
-t = "ABC"
+t = "ABCBECODEBANC"
 
-minStr = ""
 letterNeeded = {}
 for letter in t:
     if letter not in letterNeeded:
@@ -9,22 +8,36 @@ for letter in t:
     else:
         letterNeeded[letter] += 1
 
-def getMinStr():
-    for windowSize in range(len(t),len(s)+1):
-        # print("winSize", windowSize)
-        for startIndex in range(len(s)-windowSize+1):
-            # print("winSize", windowSize, "startIndex", startIndex)
-            if startIndex + windowSize <= len(s):
-                substr = s[startIndex:(startIndex+windowSize)]
-                # print(substr)
-                qualified = True
-                for letter in letterNeeded:
-                    if substr.count(letter) < letterNeeded[letter]:
-                        qualified = False
-                        break
-                
-                if qualified:
-                    return substr
-    return ""
+indexList = []
+for index, letter in enumerate(s):
+    if letter in letterNeeded:
+        indexList += [(index,letter)]
 
-print(getMinStr())
+def check(startIndex,endIndex,indexList):
+    tmpDict = {}
+    for i in range(startIndex, endIndex+1):
+        if indexList[i][1] not in tmpDict:
+            tmpDict[indexList[i][1]] = 1
+        else:
+            tmpDict[indexList[i][1]] += 1
+
+    for letter in letterNeeded:
+        if letter not in tmpDict:
+            return False
+        elif tmpDict[letter] < letterNeeded[letter]:
+            return False
+    return True
+
+startIndex = 0
+finalStr = ""
+for index, i in enumerate(indexList):
+    while check(startIndex,index,indexList):
+        substr = s[indexList[startIndex][0]:i[0]+1]
+        # print(startIndex,endIndex,substr)
+        if finalStr == "":
+            finalStr = substr
+        elif finalStr != "" and len(substr) < len(finalStr):
+            finalStr = substr
+        startIndex += 1
+
+print("finalStr",finalStr)
