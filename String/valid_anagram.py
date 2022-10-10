@@ -8,10 +8,14 @@ def isAnagram(s: str, t: str):
     if len(set(s)) != len(set(t)):
         return False
     
-    
+    dicS = {}
     for i in list(set(s)):
-        if s.count(i) != t.count(i):
+        dicS[i] = s.count(i)
+
+    for i in dicS:
+        if dicS[i] != t.count(i):
             return False
+        
     return True
 
 print(isAnagram(s,t))
