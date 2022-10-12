@@ -1,20 +1,20 @@
-# s = "applepenapple"
-# wordDict = ["apple","pen"]
+# s = "bb"
+# wordDict = ["a","b","bbb","bbbb"]
 # s = "catsandog"
 # wordDict = ["cats","dog","sand","and","cat"]
-s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"
-wordDict = ["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]
+s = "ccbb"
+wordDict = ["bc","cb"]
 
 def splitSubstring(s):
+    global wordDict
+    wordDict += ['']
     for i in range(len(s)):
         for word in wordDict:
-            if word == s[:i+1]:
-                # print(word, s[:i+1], s[i+1:])
-                if s[i+1:] == '':
-                    return True
-                if splitSubstring(s[i+1:]):
-                    return True
-    return False
+            if i+1 >= len(word):
+                if s[:len(word)] ==  word and s[len(word):i+1] in wordDict:
+                    if s[:i+1] not in wordDict:
+                        wordDict += [s[:i+1]]
+    return s in wordDict
 
 def getUnique(word):
     uniqueWords = list(set(''.join(word)))
@@ -31,3 +31,4 @@ for i in myWords:
         break
 if contains:
     print(splitSubstring(s))
+    print(wordDict)
