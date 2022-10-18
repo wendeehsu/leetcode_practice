@@ -1,21 +1,21 @@
+import heapq
+
 intervals = [[0,30],[15,20],[5,10],[5,7]]
 
 def getMinRooms(intervals):
-    intervals.sort(key=lambda x:(x[0],x[1]))
-    roomList = []
-    for interval in intervals:
-        index = -1
-        for i,room in enumerate(roomList):
-            lastRoom = room[-1]
-            # print(i, "lastRoom ->", lastRoom)
-            if interval[0] >= lastRoom[1]:
-                index = i
-                break
-        if index != -1:
-            roomList[index] += [interval]
-        else:
-            roomList += [[interval]]
-
+    intervals.sort(key=lambda x:x[0])
+    if len(intervals) == 0:
+        return 0
+    
+    # add end to the heap
+    roomList = [intervals[0][1]]
+    heapq.heapify(roomList)
+    for interval in intervals[1:]:
+        if interval[0] >= roomList[0]:
+            heapq.heappop(roomList)
+        heapq.heappush(roomList, interval[1])
+    
+    print(roomList)
     return len(roomList)
 
 print(getMinRooms(intervals))
