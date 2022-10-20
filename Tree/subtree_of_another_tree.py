@@ -1,5 +1,5 @@
 root1 = [3,4,5,1,2]
-subRoot1 = [4,1,2]
+subRoot1 = [3,1,2]
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -29,20 +29,13 @@ def traverseTree(root, subRoot):
     return False
 
 def findStart(root, subRoot):
-    startList = []
     if root != None:
         if root.val == subRoot.val:
-            startList.append(root)
-        if root.left:
-            left = findStart(root.left,subRoot)
-            if len(left) > 0:
-                startList += left
-        if root.right:
-            right = findStart(root.right,subRoot)
-            if len(right) > 0:
-                startList += right
-
-    return startList
+            if traverseTree(root,subRoot):
+                return True
+        return findStart(root.left,subRoot) or findStart(root.right,subRoot)
+    else:
+        return False
 
 def printTree(root):
     if root.left and root.right:
@@ -62,9 +55,4 @@ def printTree(root):
 
 root = createTree(0,root1)
 subRoot = createTree(0,subRoot1)
-def isSubtree(root, subRoot):
-    for i in findStart(root,subRoot):
-        if traverseTree(i,subRoot):
-            return True
-    return False
-print(isSubtree(root,subRoot))
+print(findStart(root,subRoot))
