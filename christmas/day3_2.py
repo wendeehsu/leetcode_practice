@@ -90,4 +90,3 @@ for i, line in enumerate(Lines):
         
 
 print("count ->", count)
-# 66097989
