@@ -75,77 +75,36 @@ for path in possiblePaths:
         symbol = step[1]
         rule = step[2]
 
-        if symbol == "-":
-            # print("------")
-            for subRule in rules[pathId][:len(rules[pathId])-1]:
-                # print("ori", data)
-                # print("need NOTT to follow", subRule)
-                reverseSign = ""
-                reverseNum = subRule[1]["num"]
-                if subRule[1]["sign"] == ">":
-                    reverseSign = "<"
-                    reverseNum += 1
+        for subRule in rules[pathId][:len(rules[pathId])-1]:
+            if symbol != "-" and \
+             symbol+subRule[1]["sign"]+str(subRule[1]["num"]) == symbol+rule["sign"]+str(rule["num"]):
+                # print("need to follow", symbol, rule)
+                tmpRange = updateRange(data[symbol], rule["sign"], rule["num"])
+                if tmpRange == None:
+                    canCount = False
                 else:
-                    reverseSign = ">"
-                    reverseNum -= 1
+                    data[symbol] = tmpRange
+                break
+            else:
+                # print("need NOTT to follow", symbol, subRule)
+                tmpRange = updateRange(data[subRule[0]], subRule[1]["sign"], subRule[1]["num"], True)
 
-                tmpRange = updateRange(data[subRule[0]], reverseSign, reverseNum)
                 if tmpRange == None:
                     canCount = False
                     break
                 else:
                     data[subRule[0]] = tmpRange
-                # print("new ->", data)
-                
-            if canCount == False:
-                break
-            # print("------")
-        else:
-            # print("ori", data)
-            # print("need to follow", symbol, rule)
-            for subRule in rules[pathId]:
-                if symbol+subRule[1]["sign"]+str(subRule[1]["num"]) == symbol+rule["sign"]+str(rule["num"]):
-                    # print("need to follow", symbol, rule)
-                    tmpRange = updateRange(data[symbol], rule["sign"], rule["num"])
-                    if tmpRange == None:
-                        canCount = False
-                    else:
-                        data[symbol] = tmpRange
-                    break
-                else:
-                    # print("need NOTT to follow", symbol, subRule)
-                    reverseSign = ""
-                    reverseNum = subRule[1]["num"]
-                    if subRule[1]["sign"] == ">":
-                        reverseSign = "<"
-                        reverseNum += 1
-                    else:
-                        reverseSign = ">"
-                        reverseNum -= 1
-
-                    tmpRange = updateRange(data[subRule[0]], reverseSign, reverseNum)
-                    if tmpRange == None:
-                        canCount = False
-                        break
-                    else:
-                        data[subRule[0]] = tmpRange
-            
-            if canCount == False:
-                break
-            
-            # print("result", data)
+        
+        if canCount == False:
+            break
 
     if canCount == True:
         # print("successsssssss")
         # print(path)
         # print(data)
         combinations += [data]
-        # for d in "xmas":
-        #     print(d, data[d])
-        # print("combu -->", combi, ans)
 
 ans = 0
-record = set()
 for combi in combinations:
     tmp = 1
     for symbol in "xmas":
