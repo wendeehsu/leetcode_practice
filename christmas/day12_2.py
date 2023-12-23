@@ -21,12 +21,25 @@ def getAllPos(startIndex, data, ans):
                 localResult += ["."+tail]
         else:
             if len(tmpTail) == len(ans):
-                localResult += ["."+tail]
+                if isValid(tail, ans):
+                    localResult += ["."+tail]
             elif len(tmpTail) < len(ans):
                 tofulfill = ans[:len(ans)-len(tmpTail)]
                 neededSpace = sum(tofulfill) + len(ans)-len(tmpTail)-1
                 if (1+startIndex) > neededSpace:
-                    localResult += ["."+tail, "#"+tail]
+                    tofulfillString = data[:startIndex+1]
+                    if tofulfillString.count("#") + tofulfillString.count("?") > sum(tofulfill):
+                        localResult += ["."+tail, "#"+tail]
+                        # remain_blocks = ''.join(tofulfillString).replace(".", " ").split()
+                    #     if len(remain_blocks) > len(tofulfill):
+                    #         localResult += ["."+tail, "#"+tail]
+                    #     else:
+                    #         if len(remain_blocks[-1]) > tofulfill[-1]:
+                    #             localResult += ["."+tail, "#"+tail]
+                    #         else:
+                    #             localResult += ["#"+tail]
+                    elif tofulfillString.count("#") + tofulfillString.count("?") == sum(tofulfill):
+                        localResult += ["#"+tail]
                 elif (1+startIndex) == neededSpace:
                     localResult += ["#"+tail]
     return localResult
@@ -46,19 +59,21 @@ def updateRow(row):
     ans = list(map(lambda x: int(x), ans.split(",")))
     ori_data = data
     ori_ans = ans.copy()
-    for i in range(4):
-        data += "?" + ori_data
-        ans += ori_ans
+    # for i in range(4):
+    #     data += "?" + ori_data
+    #     ans += ori_ans
     return data, ans
 
 count = 0
-for row in Lines:
+for i,row in enumerate(Lines):
     data, ans = updateRow(row)
     # print(data, ans)
     for possible in getAllPos(0,list(data), ans):
         if isValid(possible, ans):
-            print(possible)
+            # print(possible)
             count += 1
-        # print(possible, "->", isValid(possible, ans))
+        else:
+            print(possible, "->", isValid(possible, ans))
+    print(i, count)
 
 print("ans ->", count)
